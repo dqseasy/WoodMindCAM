@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WoodMind CAM</title>
+</head>
+<body>
+  <h2>WoodMind CAM</h2>
+  <pre id="out">Waiting...</pre>
+
+  <script>
+    window.app = {
+      receive(data) {
+        document.getElementById('out').textContent =
+          JSON.stringify(data, null, 2);
+      }
+    };
+
+    if (window.sketchup) {
+      window.sketchup.ruby_ready();
+    }
+  </script>
+</body>
+</html>
