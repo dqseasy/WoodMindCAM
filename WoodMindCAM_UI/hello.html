@@ -1,11 +1,13 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>WoodMind CAM</title>
+    <meta charset="UTF-8">
+    <title>WoodMind CAM</title>
 </head>
 <body>
     <h2>WoodMind CAM</h2>
+
     <p id="pipe_name"></p>
     <p id="engine"></p>
     <p id="version"></p>
@@ -15,22 +17,33 @@
     <script>
         window.app = {
             receive: function (res) {
-                document.getElementById("pipe_name").textContent =
-                    res.data.pipe_name || "";
+                console.log('Receive:', res);
 
-                document.getElementById("engine").textContent =
-                    res.data.engine || "";
+                document.getElementById('pipe_name').textContent =
+                    res.data.pipe_name || '';
 
-                document.getElementById("version").textContent =
-                    res.data.version || "";
+                document.getElementById('engine').textContent =
+                    res.data.engine || '';
 
-                document.getElementById("connected_at").textContent =
-                    res.data.connected_at || "";
+                document.getElementById('version').textContent =
+                    res.data.version || '';
 
-                document.getElementById("uptime").textContent =
-                    res.data.uptime_seconds || "";
+                document.getElementById('connected_at').textContent =
+                    res.data.connected_at || '';
+
+                document.getElementById('uptime').textContent =
+                    res.data.uptime_seconds || '';
             }
         };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.sketchup && window.sketchup.get_cached_connection) {
+                window.sketchup.get_cached_connection();
+            } else {
+                console.log('SketchUp bridge not available');
+            }
+        });
     </script>
+
 </body>
 </html>
