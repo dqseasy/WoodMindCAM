@@ -5,20 +5,36 @@
   <title>WoodMind CAM</title>
 </head>
 <body>
-  <h2>WoodMind CAM</h2>
-  <pre id="out">Waiting...</pre>
+    <h2>WoodMind CAM</h2>
+    <p id="pipe_name"></p>
+    <p id="engine"></p>
+    <p id="version"></p>
+    <p id="connected_at"></p>
+    <p id="uptime"></p>
 
-  <script>
-    window.app = {
-      receive(data) {
-        document.getElementById('out').textContent =
-          JSON.stringify(data, null, 2);
-      }
-    };
+    <script>
+        window.app = {
+            receive: function (res) {
+                document.getElementById('pipe_name').textContent =
+                    res.data.pipe_name;
 
-    if (window.sketchup) {
-      window.sketchup.ruby_ready();
-    }
-  </script>
+                document.getElementById('engine').textContent =
+                    res.data.engine;
+
+                document.getElementById('version').textContent =
+                    res.data.version;
+
+                document.getElementById('connected_at').textContent =
+                    res.data.connected_at;
+
+                document.getElementById('uptime').textContent =
+                    res.data.uptime_seconds + ' s';
+            }
+        };
+
+        if (window.sketchup) {
+            window.sketchup.ruby_ready();
+        }
+    </script>
 </body>
 </html>
