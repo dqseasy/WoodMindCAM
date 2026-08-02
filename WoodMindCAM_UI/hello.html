@@ -15,34 +15,7 @@
     <p id="uptime"></p>
 
     <script>
-        window.app = {
-            receive: function (res) {
-                console.log('Receive:', res);
-
-                document.getElementById('pipe_name').textContent =
-                    res.data.pipe_name || '';
-
-                document.getElementById('engine').textContent =
-                    res.data.engine || '';
-
-                document.getElementById('version').textContent =
-                    res.data.version || '';
-
-                document.getElementById('connected_at').textContent =
-                    res.data.connected_at || '';
-
-                document.getElementById('uptime').textContent =
-                    res.data.uptime_seconds || '';
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', function () {
-            if (window.sketchup && window.sketchup.get_cached_connection) {
-                window.sketchup.get_cached_connection();
-            } else {
-                console.log('SketchUp bridge not available');
-            }
-        });
+        alert(typeof window.sketchup);
     </script>
 
 </body>
