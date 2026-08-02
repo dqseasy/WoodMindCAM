@@ -1,0 +1,15 @@
+D:\Soft\WoodMindCAM\bin\Debug\net8.0-windows\WoodMindCAM.exe
+D:\Soft\WoodMindCAM\bin\Debug\net8.0-windows\WoodMindCAM.deps.json
+D:\Soft\WoodMindCAM\bin\Debug\net8.0-windows\WoodMindCAM.runtimeconfig.json
+D:\Soft\WoodMindCAM\bin\Debug\net8.0-windows\WoodMindCAM.dll
+D:\Soft\WoodMindCAM\bin\Debug\net8.0-windows\WoodMindCAM.pdb
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.GeneratedMSBuildEditorConfig.editorconfig
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.AssemblyInfoInputs.cache
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.AssemblyInfo.cs
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.csproj.CoreCompileInputs.cache
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.sourcelink.json
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.dll
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\refint\WoodMindCAM.dll
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.pdb
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\WoodMindCAM.genruntimeconfig.cache
+D:\Soft\WoodMindCAM\obj\Debug\net8.0-windows\ref\WoodMindCAM.dll
