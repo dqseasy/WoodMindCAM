@@ -15,7 +15,19 @@
     <p id="uptime"></p>
 
     <script>
-        alert(typeof window.sketchup);
+        window.app = {
+            receive: function (res) {
+                alert(JSON.stringify(res));
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.sketchup && window.sketchup.get_cached_connection) {
+                window.sketchup.get_cached_connection();
+            } else {
+                alert('Bridge not found');
+            }
+        });
     </script>
 
 </body>
