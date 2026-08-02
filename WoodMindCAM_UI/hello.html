@@ -15,8 +15,6 @@
     <script>
         window.app = {
             receive: function (res) {
-                console.log("Receive:", res);
-
                 document.getElementById("pipe_name").textContent =
                     res.data.pipe_name || "";
 
@@ -33,12 +31,6 @@
                     res.data.uptime_seconds || "";
             }
         };
-
-        document.addEventListener("DOMContentLoaded", function () {
-            if (window.sketchup && window.sketchup.ruby_ready) {
-                window.sketchup.ruby_ready();
-            }
-        });
     </script>
 </body>
 </html>
