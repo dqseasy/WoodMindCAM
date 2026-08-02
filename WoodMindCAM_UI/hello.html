@@ -37,14 +37,9 @@
             }
         };
 
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(function () {
-                if (window.sketchup &&
-                    typeof window.sketchup.get_cached_connection === 'function') {
-                    window.sketchup.get_cached_connection();
-                }
-            }, 100);
-        });
+        if (window.sketchup && window.sketchup.ruby_ready) {
+            window.sketchup.ruby_ready();
+        }
     </script>
 
 </body>
