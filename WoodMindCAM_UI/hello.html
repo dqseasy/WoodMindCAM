@@ -6,6 +6,7 @@
     <title>WoodMind CAM</title>
 </head>
 <body>
+
     <h2>WoodMind CAM</h2>
 
     <p id="pipe_name"></p>
@@ -17,16 +18,32 @@
     <script>
         window.app = {
             receive: function (res) {
-                alert(JSON.stringify(res));
+                if (!res || !res.data) return;
+
+                document.getElementById('pipe_name').textContent =
+                    res.data.pipe_name || '';
+
+                document.getElementById('engine').textContent =
+                    res.data.engine || '';
+
+                document.getElementById('version').textContent =
+                    res.data.version || '';
+
+                document.getElementById('connected_at').textContent =
+                    res.data.connected_at || '';
+
+                document.getElementById('uptime').textContent =
+                    res.data.uptime_seconds || '';
             }
         };
 
         document.addEventListener('DOMContentLoaded', function () {
-            if (window.sketchup && window.sketchup.get_cached_connection) {
-                window.sketchup.get_cached_connection();
-            } else {
-                alert('Bridge not found');
-            }
+            setTimeout(function () {
+                if (window.sketchup &&
+                    typeof window.sketchup.get_cached_connection === 'function') {
+                    window.sketchup.get_cached_connection();
+                }
+            }, 100);
         });
     </script>
 
