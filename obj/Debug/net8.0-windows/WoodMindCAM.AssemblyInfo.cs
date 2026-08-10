@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WoodMindCAM")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f3a6aff07d2d7dc11f68a49dc58f08342334454")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("WoodMindCAM")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WoodMindCAM")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
