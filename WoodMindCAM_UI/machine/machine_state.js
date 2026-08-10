@@ -5,60 +5,42 @@ Phase 2.1
 
 window.WoodMind = window.WoodMind || {};
 
-/* =========================================================
-MODE
-========================================================= */
-
 const MODE = {
-VIEW: 'view',
-NEW: 'new',
-EDIT: 'edit'
+  VIEW: "view",
+  NEW: "new",
+  EDIT: "edit"
 };
 
-/* =========================================================
-DEFAULT MACHINE
-(khớp với machine1.xml)
-========================================================= */
-
 const DEFAULT_MACHINE = {
-schema_version: 1,
+  schema_version: 1,
+  id: 0,
 
-id: 0,
+  name: "",
+  manufacturer: "",
+  controller: "",
 
-name: '',
-manufacturer: '',
-controller: '',
+  units: "MM",
+  feed_unit: "MM_MIN",
 
-units: 'MM',
-feed_unit: 'MM_MIN',
+  image: "../assets/default_machine.png",
 
-image: '../assets/default_machine.png',
+  startup_code: "G90\nG17\nG40\nG49",
 
-startup_code: 'G90\nG17\nG40\nG49',
+  atc: {
+    enable: true,
+    tools: [],
+    tool_change: "M05\nM06 T[T]\nG43 H[T]\nM03 S[S]"
+  },
 
-atc: {
-enable: true,
+  drill: {
+    enable: true,
+    tools: [],
+    drill_on: "M90\nM10",
+    drill_off: "M91\nM12",
+    tool_change: "T[T]\nH[T]"
+  },
 
-tools: [],
-
-tool_change: 'M05\\nM06 T[T]\\nG43 H[T]\\nM03 S[S]'
-
-},
-
-drill: {
-enable: true,
-
-tools: [],
-
-drill_on: 'M90\\nM10',
-
-drill_off: 'M91\\nM12',
-
-tool_change: 'T[T]\\nH[T]'
-
-},
-
-shutdown_code: 'M05\nM30'
+  shutdown_code: "M05\nM30"
 };
 
 /* =========================================================
