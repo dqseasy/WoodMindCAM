@@ -39,18 +39,15 @@ startup_code: 'G90\nG17\nG40\nG49',
 atc: {
 enable: true,
 
-```
 tools: [],
 
 tool_change: 'M05\\nM06 T[T]\\nG43 H[T]\\nM03 S[S]'
-```
 
 },
 
 drill: {
 enable: true,
 
-```
 tools: [],
 
 drill_on: 'M90\\nM10',
@@ -58,7 +55,6 @@ drill_on: 'M90\\nM10',
 drill_off: 'M91\\nM12',
 
 tool_change: 'T[T]\\nH[T]'
-```
 
 },
 
@@ -137,7 +133,6 @@ AppState.machineMap = data?.machine_map || {};
 
 if (AppState.machineList.length > 0) {
 
-```
 const first = AppState.machineList[0];
 
 AppState.selectedId = first.id;
@@ -147,11 +142,9 @@ const machine = getMachine(first.id);
 setCurrentMachine(machine);
 
 AppState.originalMachine = deepClone(machine);
-```
 
 } else {
 
-```
 AppState.selectedId = null;
 
 const machine = createEmptyMachine();
@@ -159,7 +152,6 @@ const machine = createEmptyMachine();
 setCurrentMachine(machine);
 
 AppState.originalMachine = deepClone(machine);
-```
 
 }
 

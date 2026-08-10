@@ -29,11 +29,9 @@ function renderMode() {
 const label = $('modeLabel');
 if (!label) return;
 
-```
 if (state.mode === WM.MODE.VIEW) label.textContent = 'View Mode';
 if (state.mode === WM.MODE.NEW) label.textContent = 'New Machine';
 if (state.mode === WM.MODE.EDIT) label.textContent = 'Edit Mode';
-```
 
 }
 
@@ -41,7 +39,6 @@ function renderMachineList() {
 const list = $('machineList');
 if (!list) return;
 
-```
 list.innerHTML = '';
 
 if (!state.machineList.length) {
@@ -65,7 +62,6 @@ state.machineList.forEach((m) => {
   });
   list.appendChild(item);
 });
-```
 
 }
 
@@ -73,7 +69,6 @@ function bindInput(id, path) {
 const el = $(id);
 if (!el) return;
 
-```
 el.value = path.get();
 
 const update = () => {
@@ -84,7 +79,6 @@ const update = () => {
 
 el.addEventListener('input', update);
 el.addEventListener('change', update);
-```
 
 }
 
@@ -92,7 +86,6 @@ function renderGeneral() {
 const m = state.currentMachine;
 if (!m) return;
 
-```
 bindInput('machineName', {
   get: () => m.name,
   set: (v) => (m.name = v)
@@ -120,7 +113,6 @@ bindInput('feedUnit', {
 
 const img = $('machineImage');
 if (img) img.src = m.image || '../assets/default_machine.png';
-```
 
 }
 
@@ -140,7 +132,6 @@ function renderATCTable() {
 const tbody = document.querySelector('#atcTable tbody');
 if (!tbody) return;
 
-```
 tbody.innerHTML = '';
 
 const m = state.currentMachine;
@@ -182,7 +173,6 @@ m.atc.tools.forEach((tool, index) => {
 });
 
 $('atcToolChange').value = m.atc.tool_change || '';
-```
 
 }
 
@@ -190,7 +180,6 @@ function renderDrillTable() {
 const tbody = document.querySelector('#drillTable tbody');
 if (!tbody) return;
 
-```
 tbody.innerHTML = '';
 
 const m = state.currentMachine;
@@ -230,7 +219,6 @@ m.drill.tools.forEach((tool, index) => {
 $('drillOn').value = m.drill.drill_on || '';
 $('drillOff').value = m.drill.drill_off || '';
 $('drillToolChange').value = m.drill.tool_change || '';
-```
 
 }
 
@@ -238,10 +226,8 @@ function renderCode() {
 const m = state.currentMachine;
 if (!m) return;
 
-```
 $('startupCode').value = m.startup_code || '';
 $('shutdownCode').value = m.shutdown_code || '';
-```
 
 }
 
@@ -250,7 +236,6 @@ const pre = $('xmlPreview');
 const m = state.currentMachine;
 if (!pre || !m) return;
 
-```
 const lines = [];
 lines.push('<Machine>');
 lines.push('  <SchemaVersion>' + (m.schema_version || 1) + '</SchemaVersion>');
@@ -288,7 +273,6 @@ lines.push(']]></ShutdownCode>');
 lines.push('</Machine>');
 
 pre.textContent = lines.join('\\n');
-```
 
 }
 
