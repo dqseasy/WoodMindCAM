@@ -67,6 +67,22 @@ originalMachine: null
 
 };
 
+function initializeForBrowser() {
+  if (AppState.currentMachine) return;
+
+  const machine = createEmptyMachine();
+
+  AppState.selectedId = null;
+  AppState.currentMachine = deepClone(machine);
+  AppState.originalMachine = deepClone(machine);
+  AppState.mode = MODE.VIEW;
+  AppState.machineList = [];
+  AppState.machineMap = {};
+  AppState.dirty = false;
+}
+
+window.WoodMind.initializeForBrowser = initializeForBrowser;
+
 /* =========================================================
 HELPERS
 ========================================================= */

@@ -394,8 +394,12 @@ alert('Phase 2.3: machine_update request will be sent to Ruby/C#');
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-if (window.sketchup && window.sketchup.ruby_ready) {
-window.sketchup.ruby_ready();
-}
+  if (window.sketchup && window.sketchup.ruby_ready) {
+    window.sketchup.ruby_ready();
+  } else {
+    // chạy trực tiếp trên Chrome/GitHub Pages
+    window.WoodMind.initializeForBrowser();
+    window.WoodMind.renderAll();
+  }
 });
 })();
