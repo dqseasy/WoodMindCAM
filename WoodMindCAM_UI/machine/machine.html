@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WoodMind CAM - Machine Settings</title>
+
+  <link rel="stylesheet" href="machine.css" />
+</head>
+
+<body>
+  <div class="app">
+
+```
+<header class="topbar">
+  <div class="title">
+    <h1>WoodMind CAM</h1>
+    <span class="subtitle">Machine Settings</span>
+  </div>
+
+  <div class="status">
+    <span id="modeLabel">View Mode</span>
+  </div>
+</header>
+
+<div class="workspace">
+
+  <!-- ========================================================= -->
+  <!-- SIDEBAR -->
+  <!-- ========================================================= -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <h2>Machines</h2>
+    </div>
+
+    <div id="machineList" class="machine-list">
+      <!-- JS render -->
+    </div>
+
+    <div class="sidebar-toolbar">
+      <button id="btnNew" class="btn primary">+ New</button>
+      <button id="btnEdit" class="btn">Edit</button>
+      <button id="btnDelete" class="btn danger">Delete</button>
+    </div>
+
+  </aside>
+
+  <!-- ========================================================= -->
+  <!-- CONTENT -->
+  <!-- ========================================================= -->
+
+  <main class="content">
+
+    <!-- Tabs -->
+
+    <div class="tabs">
+      <button class="tab active" data-tab="general">General</button>
+      <button class="tab" data-tab="atc">ATC</button>
+      <button class="tab" data-tab="drill">Drill</button>
+      <button class="tab" data-tab="code">Code</button>
+      <button class="tab" data-tab="preview">Preview</button>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- GENERAL -->
+    <!-- ===================================================== -->
+
+    <section class="tab-panel active" id="tab-general">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Machine Name</label>
+          <input id="machineName" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label>Manufacturer</label>
+          <input id="manufacturer" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label>Controller</label>
+          <input id="controller" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label>Units</label>
+          <select id="units">
+            <option value="MM">MM</option>
+            <option value="INCH">INCH</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Feed Unit</label>
+          <select id="feedUnit">
+            <option value="MM_MIN">MM / MIN</option>
+            <option value="MM_SEC">MM / SEC</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="image-panel">
+
+        <div class="image-preview">
+          <img id="machineImage" src="../assets/default_machine.png" alt="Machine" />
+        </div>
+
+        <div class="image-toolbar">
+          <button id="btnBrowseImage" class="btn">Browse...</button>
+          <button id="btnRemoveImage" class="btn">Remove</button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- ATC -->
+    <!-- ===================================================== -->
+
+    <section class="tab-panel" id="tab-atc">
+
+      <div class="section-header">
+
+        <label class="checkbox">
+          <input id="atcEnable" type="checkbox" checked />
+          <span>Enable ATC Group</span>
+        </label>
+
+        <div class="section-toolbar">
+          <button id="btnAddATC" class="btn primary">+ Add Tool</button>
+          <button id="btnDeleteATC" class="btn danger">Delete Tool</button>
+        </div>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table class="data-table" id="atcTable">
+
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Dia</th>
+              <th>Length</th>
+              <th>RPM</th>
+              <th>Feed</th>
+              <th>Plunge</th>
+            </tr>
+          </thead>
+
+          <tbody>
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="form-group">
+        <label>Tool Change Template</label>
+        <textarea id="atcToolChange" rows="8"></textarea>
+      </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- DRILL -->
+    <!-- ===================================================== -->
+
+    <section class="tab-panel" id="tab-drill">
+
+      <div class="section-header">
+
+        <label class="checkbox">
+          <input id="drillEnable" type="checkbox" checked />
+          <span>Enable Drill Group</span>
+        </label>
+
+        <div class="section-toolbar">
+          <button id="btnAddDrill" class="btn primary">+ Add Tool</button>
+          <button id="btnDeleteDrill" class="btn danger">Delete Tool</button>
+        </div>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table class="data-table" id="drillTable">
+
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Dia</th>
+              <th>Plunge</th>
+            </tr>
+          </thead>
+
+          <tbody>
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="code-grid">
+
+        <div class="form-group">
+          <label>Drill ON</label>
+          <textarea id="drillOn" rows="6"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Drill OFF</label>
+          <textarea id="drillOff" rows="6"></textarea>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Tool Change Template</label>
+        <textarea id="drillToolChange" rows="6"></textarea>
+      </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- CODE -->
+    <!-- ===================================================== -->
+
+    <section class="tab-panel" id="tab-code">
+
+      <div class="form-group">
+        <label>Startup Code</label>
+        <textarea id="startupCode" rows="10"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Shutdown Code</label>
+        <textarea id="shutdownCode" rows="10"></textarea>
+      </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- PREVIEW -->
+    <!-- ===================================================== -->
+
+    <section class="tab-panel" id="tab-preview">
+
+      <div class="preview-header">
+        <span>XML Preview</span>
+      </div>
+
+      <pre id="xmlPreview" class="xml-preview"></pre>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- ========================================================= -->
+<!-- FOOTER -->
+<!-- ========================================================= -->
+
+<footer class="footer">
+
+  <button id="btnCancel" class="btn">Cancel</button>
+
+  <div class="footer-right">
+    <button id="btnApply" class="btn">Apply</button>
+    <button id="btnOK" class="btn primary">OK</button>
+  </div>
+
+</footer>
+```
+
+  </div>
+
+  <script src="machine_state.js"></script>
+
+  <script src="machine.js"></script>
+
+</body>
+</html>

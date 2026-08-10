@@ -1,0 +1,481 @@
+:root {
+--bg: #f3f4f6;
+--surface: #ffffff;
+--surface-2: #f8fafc;
+--border: #d1d5db;
+--border-strong: #9ca3af;
+--text: #111827;
+--text-muted: #6b7280;
+--primary: #2563eb;
+--primary-hover: #1d4ed8;
+--danger: #dc2626;
+--danger-hover: #b91c1c;
+--selected: #dbeafe;
+--table-header: #f3f4f6;
+--shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+* {
+  box-sizing: border-box;
+  }
+
+html, body {
+margin: 0;
+padding: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+background: var(--bg);
+color: var(--text);
+font-family: "Segoe UI", Tahoma, sans-serif;
+font-size: 13px;
+}
+
+.app {
+display: flex;
+flex-direction: column;
+width: 100%;
+height: 100%;
+}
+
+/* =========================================================
+TOPBAR
+========================================================= */
+
+.topbar {
+height: 56px;
+background: var(--surface);
+border-bottom: 1px solid var(--border);
+padding: 0 16px;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+box-shadow: var(--shadow);
+}
+
+.title {
+display: flex;
+align-items: baseline;
+gap: 10px;
+}
+
+.title h1 {
+margin: 0;
+font-size: 18px;
+font-weight: 600;
+}
+
+.subtitle {
+color: var(--text-muted);
+}
+
+.status {
+color: var(--text-muted);
+font-size: 12px;
+}
+
+/* =========================================================
+WORKSPACE
+========================================================= */
+
+.workspace {
+flex: 1;
+display: flex;
+min-height: 0;
+}
+
+/* =========================================================
+SIDEBAR
+========================================================= */
+
+.sidebar {
+width: 240px;
+background: var(--surface);
+border-right: 1px solid var(--border);
+
+display: flex;
+flex-direction: column;
+}
+
+.sidebar-header {
+padding: 14px 16px;
+border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h2 {
+margin: 0;
+font-size: 14px;
+}
+
+.machine-list {
+flex: 1;
+overflow: auto;
+}
+
+.machine-item {
+padding: 10px 14px;
+border-bottom: 1px solid #eef2f7;
+cursor: pointer;
+transition: background .15s ease;
+}
+
+.machine-item:hover {
+background: #f9fafb;
+}
+
+.machine-item.active {
+background: var(--selected);
+border-left: 3px solid var(--primary);
+padding-left: 11px;
+}
+
+.machine-name {
+font-weight: 600;
+}
+
+.machine-meta {
+color: var(--text-muted);
+font-size: 12px;
+margin-top: 2px;
+}
+
+.sidebar-toolbar {
+border-top: 1px solid var(--border);
+padding: 12px;
+display: grid;
+gap: 8px;
+}
+
+/* =========================================================
+CONTENT
+========================================================= */
+
+.content {
+flex: 1;
+display: flex;
+flex-direction: column;
+min-width: 0;
+background: var(--surface-2);
+}
+
+/* =========================================================
+TABS
+========================================================= */
+
+.tabs {
+display: flex;
+gap: 2px;
+padding: 10px 10px 0;
+background: var(--surface-2);
+border-bottom: 1px solid var(--border);
+}
+
+.tab {
+padding: 10px 16px;
+border: 1px solid transparent;
+border-bottom: none;
+background: transparent;
+cursor: pointer;
+color: var(--text-muted);
+border-radius: 8px 8px 0 0;
+}
+
+.tab:hover {
+background: #eef2f7;
+}
+
+.tab.active {
+background: var(--surface);
+border-color: var(--border);
+color: var(--text);
+font-weight: 600;
+}
+
+.tab-panel {
+display: none;
+flex: 1;
+overflow: auto;
+background: var(--surface);
+padding: 16px;
+}
+
+.tab-panel.active {
+display: block;
+}
+
+/* =========================================================
+FORM
+========================================================= */
+
+.form-grid {
+display: grid;
+grid-template-columns: repeat(2, minmax(220px, 1fr));
+gap: 16px;
+}
+
+.form-group {
+display: flex;
+flex-direction: column;
+gap: 6px;
+margin-bottom: 16px;
+}
+
+.form-group label {
+font-weight: 600;
+}
+
+input[type="text"],
+select,
+textarea {
+width: 100%;
+border: 1px solid var(--border);
+border-radius: 6px;
+background: #fff;
+color: var(--text);
+padding: 8px 10px;
+font-size: 13px;
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+
+textarea {
+resize: vertical;
+min-height: 96px;
+font-family: Consolas, "Courier New", monospace;
+line-height: 1.4;
+}
+
+/* =========================================================
+IMAGE
+========================================================= */
+
+.image-panel {
+margin-top: 8px;
+display: flex;
+gap: 16px;
+align-items: flex-start;
+}
+
+.image-preview {
+width: 220px;
+height: 140px;
+border: 1px solid var(--border);
+border-radius: 8px;
+background: #f9fafb;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+
+.image-preview img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+
+.image-toolbar {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+
+/* =========================================================
+SECTION
+========================================================= */
+
+.section-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 12px;
+}
+
+.checkbox {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.section-toolbar {
+display: flex;
+gap: 8px;
+}
+
+/* =========================================================
+TABLE
+========================================================= */
+
+.table-wrapper {
+border: 1px solid var(--border);
+border-radius: 8px;
+overflow: auto;
+background: #fff;
+margin-bottom: 16px;
+}
+
+.data-table {
+width: 100%;
+border-collapse: collapse;
+min-width: 900px;
+}
+
+.data-table th,
+.data-table td {
+border-bottom: 1px solid #e5e7eb;
+padding: 8px;
+text-align: left;
+}
+
+.data-table th {
+position: sticky;
+top: 0;
+background: var(--table-header);
+z-index: 1;
+font-weight: 600;
+}
+
+.data-table tr:hover td {
+background: #f9fafb;
+}
+
+.data-table tr.selected td {
+background: var(--selected);
+}
+
+.data-table input,
+.data-table select {
+width: 100%;
+border: 1px solid transparent;
+background: transparent;
+padding: 4px 6px;
+}
+
+.data-table input:focus,
+.data-table select:focus {
+border-color: var(--primary);
+background: #fff;
+}
+
+/* =========================================================
+CODE GRID
+========================================================= */
+
+.code-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 16px;
+}
+
+/* =========================================================
+PREVIEW
+========================================================= */
+
+.preview-header {
+font-weight: 600;
+margin-bottom: 8px;
+}
+
+.xml-preview {
+margin: 0;
+padding: 16px;
+border: 1px solid var(--border);
+border-radius: 8px;
+background: #0f172a;
+color: #e5e7eb;
+overflow: auto;
+white-space: pre;
+font-family: Consolas, "Courier New", monospace;
+font-size: 12px;
+line-height: 1.5;
+}
+
+/* =========================================================
+BUTTONS
+========================================================= */
+
+.btn {
+border: 1px solid var(--border);
+background: #fff;
+color: var(--text);
+border-radius: 6px;
+padding: 8px 12px;
+cursor: pointer;
+transition: background .15s ease, border-color .15s ease;
+}
+
+.btn:hover {
+background: #f3f4f6;
+}
+
+.btn.primary {
+background: var(--primary);
+border-color: var(--primary);
+color: #fff;
+}
+
+.btn.primary:hover {
+background: var(--primary-hover);
+border-color: var(--primary-hover);
+}
+
+.btn.danger {
+background: var(--danger);
+border-color: var(--danger);
+color: #fff;
+}
+
+.btn.danger:hover {
+background: var(--danger-hover);
+border-color: var(--danger-hover);
+}
+
+/* =========================================================
+FOOTER
+========================================================= */
+
+.footer {
+height: 56px;
+background: var(--surface);
+border-top: 1px solid var(--border);
+padding: 0 16px;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.footer-right {
+display: flex;
+gap: 8px;
+}
+
+/* =========================================================
+RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+.form-grid {
+grid-template-columns: 1fr;
+}
+
+.code-grid {
+grid-template-columns: 1fr;
+}
+
+.image-panel {
+flex-direction: column;
+}
+
+.sidebar {
+width: 220px;
+}
+}
