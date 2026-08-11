@@ -336,6 +336,14 @@ Phase 2.1
         $('btnEdit').disabled = !view || !state.selectedId;
         $('btnDelete').disabled = !view || !state.selectedId;
 
+        // ATC
+        $('btnAddATC').disabled = view;
+        $('btnDeleteATC').disabled = view;
+
+        // Drill
+        $('btnAddDrill').disabled = view;
+        $('btnDeleteDrill').disabled = view;
+
         $('btnApply').disabled = view;
 
         $('btnOK').textContent = view ? 'Close' : 'OK';
