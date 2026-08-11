@@ -4,402 +4,475 @@ Phase 2.1
 ========================================================= */
 
 (function () {
-const WM = window.WoodMind;
-const state = WM.AppState;
+    const WM = window.WoodMind;
+    const state = WM.AppState;
 
-const $ = (id) => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
-const tabs = document.querySelectorAll('.tab');
-const panels = document.querySelectorAll('.tab-panel');
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.tab-panel');
 
-function renderAll() {
-renderMode();
-renderMachineList();
-renderGeneral();
-renderATCTable();
-renderDrillTable();
-renderCode();
-renderPreviewXML();
-updateButtons();
-}
-
-WM.renderAll = renderAll;
-
-function renderMode() {
-const label = $('modeLabel');
-if (!label) return;
-
-if (state.mode === WM.MODE.VIEW) label.textContent = 'View Mode';
-if (state.mode === WM.MODE.NEW) label.textContent = 'New Machine';
-if (state.mode === WM.MODE.EDIT) label.textContent = 'Edit Mode';
-
-}
-
-function renderMachineList() {
-const list = $('machineList');
-if (!list) return;
-
-list.innerHTML = '';
-
-if (!state.machineList.length) {
-  const empty = document.createElement('div');
-  empty.className = 'machine-item';
-  empty.innerHTML = '<div class="machine-name">No machine</div><div class="machine-meta">Create your first machine</div>';
-  list.appendChild(empty);
-  return;
-}
-
-state.machineList.forEach((m) => {
-  const item = document.createElement('div');
-  item.className = 'machine-item' + (m.id === state.selectedId ? ' active' : '');
-  item.innerHTML = '<div class="machine-name">' + (m.name || 'Unnamed') + '</div><div class="machine-meta">ID ' + m.id + '</div>';
-  item.addEventListener('click', () => {
-    if (state.mode !== WM.MODE.VIEW && state.dirty) {
-      if (!confirm('Discard current changes?')) return;
+    function renderAll() {
+        renderMode();
+        renderMachineList();
+        renderGeneral();
+        renderATCTable();
+        renderDrillTable();
+        renderCode();
+        renderPreviewXML();
+        updateButtons();
     }
-    WM.selectMachine(m.id);
-    renderAll();
-  });
-  list.appendChild(item);
-});
 
-}
+    WM.renderAll = renderAll;
 
-function bindInput(id, path) {
-const el = $(id);
-if (!el) return;
+    function renderMode() {
+        const label = $('modeLabel');
+        if (!label) return;
 
-el.value = path.get();
+        if (state.mode === WM.MODE.VIEW) label.textContent = 'View Mode';
+        if (state.mode === WM.MODE.NEW) label.textContent = 'New Machine';
+        if (state.mode === WM.MODE.EDIT) label.textContent = 'Edit Mode';
 
-const update = () => {
-  path.set(el.type === 'checkbox' ? el.checked : el.value);
-  WM.markDirty();
-  renderPreviewXML();
-};
+    }
 
-el.addEventListener('input', update);
-el.addEventListener('change', update);
+    function renderMachineList() {
+        const list = $('machineList');
+        if (!list) return;
 
-}
+        list.innerHTML = '';
 
-function renderGeneral() {
-const m = state.currentMachine;
-if (!m) return;
+        if (!state.machineList.length) {
+            const empty = document.createElement('div');
+            empty.className = 'machine-item';
+            empty.innerHTML = '<div class="machine-name">No machine</div><div class="machine-meta">Create your first machine</div>';
+            list.appendChild(empty);
+            return;
+        }
 
-bindInput('machineName', {
-  get: () => m.name,
-  set: (v) => (m.name = v)
-});
+        state.machineList.forEach((m) => {
+            const item = document.createElement('div');
+            item.className = 'machine-item' + (m.id === state.selectedId ? ' active' : '');
+            item.innerHTML = '<div class="machine-name">' + (m.name || 'Unnamed') + '</div><div class="machine-meta">ID ' + m.id + '</div>';
+            item.addEventListener('click', () => {
+                if (state.mode !== WM.MODE.VIEW) return;
 
-bindInput('manufacturer', {
-  get: () => m.manufacturer,
-  set: (v) => (m.manufacturer = v)
-});
+                WM.selectMachine(m.id);
 
-bindInput('controller', {
-  get: () => m.controller,
-  set: (v) => (m.controller = v)
-});
+                renderAll();
+            });
+            list.appendChild(item);
+        });
 
-bindInput('units', {
-  get: () => m.units,
-  set: (v) => (m.units = v)
-});
+    }
 
-bindInput('feedUnit', {
-  get: () => m.feed_unit,
-  set: (v) => (m.feed_unit = v)
-});
+    function bindInput(id, path) {
+        const el = $(id);
+        if (!el) return;
 
-const img = $('machineImage');
-if (img) img.src = m.image || '../assets/default_machine.png';
+        el.value = path.get();
 
-}
+        const update = () => {
+            path.set(el.type === 'checkbox' ? el.checked : el.value);
+            WM.markDirty();
+            renderPreviewXML();
+        };
 
-function createCellInput(value, onChange) {
-const input = document.createElement('input');
-input.type = 'text';
-input.value = value ?? '';
-input.addEventListener('input', (e) => {
-onChange(e.target.value);
-WM.markDirty();
-renderPreviewXML();
-});
-return input;
-}
+        el.addEventListener('input', update);
+        el.addEventListener('change', update);
 
-function renderATCTable() {
-const tbody = document.querySelector('#atcTable tbody');
-if (!tbody) return;
+    }
 
-tbody.innerHTML = '';
+    function renderGeneral() {
+        const m = state.currentMachine;
+        if (!m) return;
 
-const m = state.currentMachine;
-if (!m) return;
+        bindInput('machineName', {
+            get: () => m.name,
+            set: (v) => (m.name = v)
+        });
 
-$('atcEnable').checked = !!m.atc.enable;
+        bindInput('manufacturer', {
+            get: () => m.manufacturer,
+            set: (v) => (m.manufacturer = v)
+        });
 
-m.atc.tools.forEach((tool, index) => {
-  const tr = document.createElement('tr');
+        bindInput('controller', {
+            get: () => m.controller,
+            set: (v) => (m.controller = v)
+        });
 
-  const cols = [
-    ['num', tool.num],
-    ['name', tool.name],
-    ['type', tool.type],
-    ['dia', tool.dia],
-    ['length', tool.length],
-    ['spindle_speed', tool.spindle_speed],
-    ['feed_rate', tool.feed_rate],
-    ['plunge_rate', tool.plunge_rate]
-  ];
+        bindInput('units', {
+            get: () => m.units,
+            set: (v) => (m.units = v)
+        });
 
-  cols.forEach(([key, value]) => {
-    const td = document.createElement('td');
-    td.appendChild(
-      createCellInput(value, (v) => {
-        tool[key] = isNaN(v) || key === 'name' || key === 'type' ? v : Number(v);
-      })
-    );
-    tr.appendChild(td);
-  });
+        bindInput('feedUnit', {
+            get: () => m.feed_unit,
+            set: (v) => (m.feed_unit = v)
+        });
 
-  tr.addEventListener('click', () => {
-    tbody.querySelectorAll('tr').forEach((r) => r.classList.remove('selected'));
-    tr.classList.add('selected');
-    tbody.dataset.selected = String(index);
-  });
+        const img = $('machineImage');
+        if (img) img.src = m.image || '../assets/default_machine.png';
 
-  tbody.appendChild(tr);
-});
+    }
 
-$('atcToolChange').value = m.atc.tool_change || '';
+    function createCellInput(value, onChange) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = value ?? '';
+        input.addEventListener('input', (e) => {
+            onChange(e.target.value);
+            WM.markDirty();
+            renderPreviewXML();
+        });
+        return input;
+    }
 
-}
+    function createCellSelect(value, options, onChange) {
+        const select = document.createElement('select');
 
-function renderDrillTable() {
-const tbody = document.querySelector('#drillTable tbody');
-if (!tbody) return;
+        options.forEach(opt => {
+            const o = document.createElement('option');
+            o.value = opt;
+            o.textContent = opt;
+            if (opt === value) o.selected = true;
+            select.appendChild(o);
+        });
 
-tbody.innerHTML = '';
+        select.addEventListener('change', e => {
+            onChange(e.target.value);
+            WM.markDirty();
+            renderPreviewXML();
+        });
 
-const m = state.currentMachine;
-if (!m) return;
+        return select;
+    }
 
-$('drillEnable').checked = !!m.drill.enable;
+    function renderATCTable() {
+        const tbody = document.querySelector('#atcTable tbody');
+        if (!tbody) return;
 
-m.drill.tools.forEach((tool, index) => {
-  const tr = document.createElement('tr');
+        tbody.innerHTML = '';
 
-  const cols = [
-    ['num', tool.num],
-    ['name', tool.name],
-    ['dia', tool.dia],
-    ['plunge_rate', tool.plunge_rate]
-  ];
+        const m = state.currentMachine;
+        if (!m) return;
 
-  cols.forEach(([key, value]) => {
-    const td = document.createElement('td');
-    td.appendChild(
-      createCellInput(value, (v) => {
-        tool[key] = isNaN(v) || key === 'name' ? v : Number(v);
-      })
-    );
-    tr.appendChild(td);
-  });
+        $('atcEnable').checked = !!m.atc.enable;
 
-  tr.addEventListener('click', () => {
-    tbody.querySelectorAll('tr').forEach((r) => r.classList.remove('selected'));
-    tr.classList.add('selected');
-    tbody.dataset.selected = String(index);
-  });
+        m.atc.tools.forEach((tool, index) => {
+            const tr = document.createElement('tr');
 
-  tbody.appendChild(tr);
-});
+            const cols = [
+                ['num', tool.num],
+                ['name', tool.name],
+                ['type', tool.type],
+                ['dia', tool.dia],
+                ['length', tool.length],
+                ['spindle_speed', tool.spindle_speed],
+                ['feed_rate', tool.feed_rate],
+                ['plunge_rate', tool.plunge_rate]
+            ];
 
-$('drillOn').value = m.drill.drill_on || '';
-$('drillOff').value = m.drill.drill_off || '';
-$('drillToolChange').value = m.drill.tool_change || '';
+            cols.forEach(([key, value]) => {
+                const td = document.createElement('td');
 
-}
+                if (key === 'type') {
+                    td.appendChild(
+                        createCellSelect(
+                            value,
+                            [
+                                'EndMill',
+                                'BallEndMill',
+                                'VBit',
+                                'Drill',
+                                'Compression',
+                                'Surfacing',
+                                'SlotCutter',
+                                'Custom'
+                            ],
+                            (v) => {
+                                tool.type = v;
+                            }
+                        )
+                    );
+                } else {
+                    td.appendChild(
+                        createCellInput(value, (v) => {
+                            tool[key] = isNaN(v) || key === 'name' ? v : Number(v);
+                        })
+                    );
+                }
 
-function renderCode() {
-const m = state.currentMachine;
-if (!m) return;
+                tr.appendChild(td);
+            });
 
-$('startupCode').value = m.startup_code || '';
-$('shutdownCode').value = m.shutdown_code || '';
+            tr.addEventListener('click', () => {
+                tbody.querySelectorAll('tr').forEach((r) => r.classList.remove('selected'));
+                tr.classList.add('selected');
+                tbody.dataset.selected = String(index);
+            });
 
-}
+            tbody.appendChild(tr);
+        });
 
-function renderPreviewXML() {
-const pre = $('xmlPreview');
-const m = state.currentMachine;
-if (!pre || !m) return;
+        $('atcToolChange').value = m.atc.tool_change || '';
 
-const lines = [];
-lines.push('<Machine>');
-lines.push('  <SchemaVersion>' + (m.schema_version || 1) + '</SchemaVersion>');
-lines.push('  <Id>' + (m.id || 0) + '</Id>');
-lines.push('  <Name>' + (m.name || '') + '</Name>');
-lines.push('  <Manufacturer>' + (m.manufacturer || '') + '</Manufacturer>');
-lines.push('  <Controller>' + (m.controller || '') + '</Controller>');
-lines.push('  <Units>' + (m.units || 'MM') + '</Units>');
-lines.push('  <FeedUnit>' + (m.feed_unit || 'MM_MIN') + '</FeedUnit>');
-lines.push('  <Image>' + (m.image || '../assets/default_machine.png') + '</Image>');
-lines.push('  <StartupCode><![CDATA[');
-lines.push(m.startup_code || '');
-lines.push(']]></StartupCode>');
-lines.push('  <ATCGroup>');
-lines.push('    <Enable>' + (m.atc.enable ? 1 : 0) + '</Enable>');
-lines.push('    <ToolChange><![CDATA[');
-lines.push(m.atc.tool_change || '');
-lines.push(']]></ToolChange>');
-lines.push('  </ATCGroup>');
-lines.push('  <DrillGroup>');
-lines.push('    <Enable>' + (m.drill.enable ? 1 : 0) + '</Enable>');
-lines.push('    <DrillON><![CDATA[');
-lines.push(m.drill.drill_on || '');
-lines.push(']]></DrillON>');
-lines.push('    <DrillOFF><![CDATA[');
-lines.push(m.drill.drill_off || '');
-lines.push(']]></DrillOFF>');
-lines.push('    <ToolChange><![CDATA[');
-lines.push(m.drill.tool_change || '');
-lines.push(']]></ToolChange>');
-lines.push('  </DrillGroup>');
-lines.push('  <ShutdownCode><![CDATA[');
-lines.push(m.shutdown_code || '');
-lines.push(']]></ShutdownCode>');
-lines.push('</Machine>');
+    }
 
-pre.textContent = lines.join('\\n');
+    function renderDrillTable() {
+        const tbody = document.querySelector('#drillTable tbody');
+        if (!tbody) return;
 
-}
+        tbody.innerHTML = '';
 
-function updateButtons() {
-const view = state.mode === WM.MODE.VIEW;
-$('btnEdit').disabled = !view || !state.selectedId;
-$('btnDelete').disabled = !view || !state.selectedId;
-$('btnApply').disabled = view;
-$('btnOK').textContent = view ? 'Close' : 'OK';
-}
+        const m = state.currentMachine;
+        if (!m) return;
 
-tabs.forEach((tab) => {
-tab.addEventListener('click', () => {
-const name = tab.dataset.tab;
-tabs.forEach((t) => t.classList.remove('active'));
-panels.forEach((p) => p.classList.remove('active'));
-tab.classList.add('active');
-$('tab-' + name).classList.add('active');
-WM.setCurrentTab(name);
-});
-});
+        $('drillEnable').checked = !!m.drill.enable;
 
-$('btnNew').addEventListener('click', () => {
-WM.enterNewMode();
-renderAll();
-});
+        m.drill.tools.forEach((tool, index) => {
+            const tr = document.createElement('tr');
 
-$('btnEdit').addEventListener('click', () => {
-WM.enterEditMode();
-renderAll();
-});
+            const cols = [
+                ['num', tool.num],
+                ['name', tool.name],
+                ['dia', tool.dia],
+                ['plunge_rate', tool.plunge_rate]
+            ];
 
-$('btnDelete').addEventListener('click', () => {
-if (!state.selectedId) return;
-if (confirm('Delete selected machine?')) {
-alert('Phase 2.3: machine_delete request will be sent to Ruby/C#');
-}
-});
+            cols.forEach(([key, value]) => {
+                const td = document.createElement('td');
+                td.appendChild(
+                    createCellInput(value, (v) => {
+                        tool[key] = isNaN(v) || key === 'name' ? v : Number(v);
+                    })
+                );
+                tr.appendChild(td);
+            });
 
-$('btnAddATC').addEventListener('click', () => {
-state.currentMachine.atc.tools.push({
-num: state.currentMachine.atc.tools.length + 1,
-name: '',
-type: 'EndMill',
-dia: 0,
-length: 0,
-spindle_speed: 18000,
-feed_rate: 8000,
-plunge_rate: 3000
-});
-WM.markDirty();
-renderATCTable();
-renderPreviewXML();
-});
+            tr.addEventListener('click', () => {
+                tbody.querySelectorAll('tr').forEach((r) => r.classList.remove('selected'));
+                tr.classList.add('selected');
+                tbody.dataset.selected = String(index);
+            });
 
-$('btnDeleteATC').addEventListener('click', () => {
-const tbody = document.querySelector('#atcTable tbody');
-const index = Number(tbody.dataset.selected);
-if (Number.isInteger(index)) {
-state.currentMachine.atc.tools.splice(index, 1);
-delete tbody.dataset.selected;
-WM.markDirty();
-renderATCTable();
-renderPreviewXML();
-}
-});
+            tbody.appendChild(tr);
+        });
 
-$('btnAddDrill').addEventListener('click', () => {
-state.currentMachine.drill.tools.push({
-num: 21 + state.currentMachine.drill.tools.length,
-name: '',
-dia: 0,
-plunge_rate: 3000
-});
-WM.markDirty();
-renderDrillTable();
-renderPreviewXML();
-});
+        $('drillOn').value = m.drill.drill_on || '';
+        $('drillOff').value = m.drill.drill_off || '';
+        $('drillToolChange').value = m.drill.tool_change || '';
 
-$('btnDeleteDrill').addEventListener('click', () => {
-const tbody = document.querySelector('#drillTable tbody');
-const index = Number(tbody.dataset.selected);
-if (Number.isInteger(index)) {
-state.currentMachine.drill.tools.splice(index, 1);
-delete tbody.dataset.selected;
-WM.markDirty();
-renderDrillTable();
-renderPreviewXML();
-}
-});
+    }
 
-$('btnCancel').addEventListener('click', () => {
-if (state.mode === WM.MODE.VIEW) {
-window.close();
-return;
-}
-WM.cancelEditing();
-renderAll();
-});
+    function renderCode() {
+        const m = state.currentMachine;
+        if (!m) return;
 
-$('btnApply').addEventListener('click', () => {
-if (state.mode === WM.MODE.NEW) {
-alert('Phase 2.2: machine_create request will be sent to Ruby/C#');
-} else if (state.mode === WM.MODE.EDIT) {
-alert('Phase 2.3: machine_update request will be sent to Ruby/C#');
-}
-});
+        $('startupCode').value = m.startup_code || '';
+        $('shutdownCode').value = m.shutdown_code || '';
 
-$('btnOK').addEventListener('click', () => {
-if (state.mode === WM.MODE.VIEW) {
-window.close();
-return;
-}
-if (state.mode === WM.MODE.NEW) {
-alert('Phase 2.2: machine_create request will be sent to Ruby/C#');
-} else if (state.mode === WM.MODE.EDIT) {
-alert('Phase 2.3: machine_update request will be sent to Ruby/C#');
-}
-});
+    }
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.sketchup && window.sketchup.ruby_ready) {
-    window.sketchup.ruby_ready();
-  } else {
-    // chạy trực tiếp trên Chrome/GitHub Pages
-    window.WoodMind.initializeForBrowser();
-    window.WoodMind.renderAll();
-  }
-});
+    function xmlText(text) {
+        return (text || '').replace(/\\\\n/g, '\n');
+    }
+
+    function renderPreviewXML() {
+        const pre = $('xmlPreview');
+        const m = state.currentMachine;
+        if (!pre || !m) return;
+
+        const lines = [];
+        lines.push('<Machine>');
+        lines.push('  <SchemaVersion>' + (m.schema_version || 1) + '</SchemaVersion>');
+        lines.push('  <Id>' + (m.id || 0) + '</Id>');
+        lines.push('  <Name>' + (m.name || '') + '</Name>');
+        lines.push('  <Manufacturer>' + (m.manufacturer || '') + '</Manufacturer>');
+        lines.push('  <Controller>' + (m.controller || '') + '</Controller>');
+        lines.push('  <Units>' + (m.units || 'MM') + '</Units>');
+        lines.push('  <FeedUnit>' + (m.feed_unit || 'MM_MIN') + '</FeedUnit>');
+        lines.push('  <Image>' + (m.image || '../assets/default_machine.png') + '</Image>');
+        lines.push('  <StartupCode><![CDATA[');
+        lines.push(xmlText(m.startup_code));
+        lines.push(']]></StartupCode>');
+        lines.push('  <ATCGroup>');
+        lines.push('    <Enable>' + (m.atc.enable ? 1 : 0) + '</Enable>');
+        lines.push('    <ToolChange><![CDATA[');
+        lines.push(xmlText(m.atc.tool_change));
+        lines.push(']]></ToolChange>');
+        lines.push('  </ATCGroup>');
+        lines.push('  <DrillGroup>');
+        lines.push('    <Enable>' + (m.drill.enable ? 1 : 0) + '</Enable>');
+        lines.push('    <DrillON><![CDATA[');
+        lines.push(xmlText(m.drill.drill_on));
+        lines.push(']]></DrillON>');
+        lines.push('    <DrillOFF><![CDATA[');
+        lines.push(xmlText(m.drill.drill_off));
+        lines.push(']]></DrillOFF>');
+        lines.push('    <ToolChange><![CDATA[');
+        lines.push(xmlText(m.drill.tool_change));
+        lines.push(']]></ToolChange>');
+        lines.push('  </DrillGroup>');
+        lines.push('  <ShutdownCode><![CDATA[');
+        lines.push(xmlText(m.shutdown_code));
+        lines.push(']]></ShutdownCode>');
+        lines.push('</Machine>');
+
+        pre.textContent = lines.join('\\n');
+
+    }
+
+    function updateButtons() {
+        const view = state.mode === WM.MODE.VIEW;
+
+        const list = $('machineList');
+
+        if (list) {
+            list.classList.toggle('disabled', !view);
+        }
+
+        $('btnNew').disabled = !view;
+        $('btnEdit').disabled = !view || !state.selectedId;
+        $('btnDelete').disabled = !view || !state.selectedId;
+
+        $('btnApply').disabled = view;
+
+        $('btnOK').textContent = view ? 'Close' : 'OK';
+    }
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            const name = tab.dataset.tab;
+            tabs.forEach((t) => t.classList.remove('active'));
+            panels.forEach((p) => p.classList.remove('active'));
+            tab.classList.add('active');
+            $('tab-' + name).classList.add('active');
+            WM.setCurrentTab(name);
+        });
+    });
+
+    $('btnNew').addEventListener('click', () => {
+        if (!confirmDiscard()) return;
+
+        WM.enterNewMode();
+
+        renderAll();
+    });
+
+    $('btnEdit').addEventListener('click', () => {
+        if (!confirmDiscard()) return;
+
+        WM.enterEditMode();
+
+        renderAll();
+    });
+
+    $('btnDelete').addEventListener('click', () => {
+        if (!state.selectedId) return;
+        if (confirm('Delete selected machine?')) {
+            alert('Phase 2.3: machine_delete request will be sent to Ruby/C#');
+        }
+    });
+
+    $('btnAddATC').addEventListener('click', () => {
+        state.currentMachine.atc.tools.push({
+            num: state.currentMachine.atc.tools.length + 1,
+            name: '',
+            type: 'EndMill',
+            dia: 0,
+            length: 0,
+            spindle_speed: 18000,
+            feed_rate: 8000,
+            plunge_rate: 3000
+        });
+        WM.markDirty();
+        renderATCTable();
+        renderPreviewXML();
+    });
+
+    $('btnDeleteATC').addEventListener('click', () => {
+        const tbody = document.querySelector('#atcTable tbody');
+        const index = Number(tbody.dataset.selected);
+        if (Number.isInteger(index)) {
+            state.currentMachine.atc.tools.splice(index, 1);
+            delete tbody.dataset.selected;
+            WM.markDirty();
+            renderATCTable();
+            renderPreviewXML();
+        }
+    });
+
+    $('btnAddDrill').addEventListener('click', () => {
+        state.currentMachine.drill.tools.push({
+            num: 21 + state.currentMachine.drill.tools.length,
+            name: '',
+            dia: 0,
+            plunge_rate: 3000
+        });
+        WM.markDirty();
+        renderDrillTable();
+        renderPreviewXML();
+    });
+
+    $('btnDeleteDrill').addEventListener('click', () => {
+        const tbody = document.querySelector('#drillTable tbody');
+        const index = Number(tbody.dataset.selected);
+        if (Number.isInteger(index)) {
+            state.currentMachine.drill.tools.splice(index, 1);
+            delete tbody.dataset.selected;
+            WM.markDirty();
+            renderDrillTable();
+            renderPreviewXML();
+        }
+    });
+
+    $('btnCancel').addEventListener('click', () => {
+        if (state.mode === WM.MODE.VIEW) {
+            window.close();
+            return;
+        }
+        WM.cancelEditing();
+        renderAll();
+    });
+
+    $('btnApply').addEventListener('click', () => {
+        if (state.mode === WM.MODE.NEW) {
+            alert('Phase 2.2: machine_create request will be sent to Ruby/C#');
+        } else if (state.mode === WM.MODE.EDIT) {
+            alert('Phase 2.3: machine_update request will be sent to Ruby/C#');
+        }
+    });
+
+    $('btnOK').addEventListener('click', () => {
+        if (state.mode === WM.MODE.VIEW) {
+            window.close();
+            return;
+        }
+        if (state.mode === WM.MODE.NEW) {
+            alert('Phase 2.2: machine_create request will be sent to Ruby/C#');
+        } else if (state.mode === WM.MODE.EDIT) {
+            alert('Phase 2.3: machine_update request will be sent to Ruby/C#');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.sketchup && window.sketchup.ruby_ready) {
+            window.sketchup.ruby_ready();
+        } else {
+            // chạy trực tiếp trên Chrome/GitHub Pages
+            window.WoodMind.initializeForBrowser();
+            window.WoodMind.renderAll();
+        }
+    });
+
+    function confirmDiscard() {
+        if (state.mode === WM.MODE.VIEW) return true;
+
+        if (!state.dirty) return true;
+
+        return confirm('You have unsaved changes. Discard current changes?');
+    }
 })();
+
+

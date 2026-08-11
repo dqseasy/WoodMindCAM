@@ -81,8 +81,6 @@ function initializeForBrowser() {
   AppState.dirty = false;
 }
 
-window.WoodMind.initializeForBrowser = initializeForBrowser;
-
 /* =========================================================
 HELPERS
 ========================================================= */
@@ -272,6 +270,8 @@ window.WoodMind.getCurrentMachineData = getCurrentMachineData;
 window.WoodMind.markDirty = markDirty;
 
 window.WoodMind.resetDirty = resetDirty;
+
+window.WoodMind.initializeForBrowser = initializeForBrowser;
 
 window.WoodMind.receiveMachineList = function (data) {
 
